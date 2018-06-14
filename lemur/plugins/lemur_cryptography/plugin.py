@@ -156,8 +156,8 @@ def normalize_extensions(csr):
 
     # Remove original san extension from CSR and add new SAN extension
     extensions = list(filter(filter_san_extensions, csr.extensions._extensions))
-    if san_extension is not None and len(san_extension.value._general_names) > 0:
-        extensions.append(san_extension)
+    #if san_extension is not None and len(san_extension.value._general_names) > 0:
+    #    extensions.append(san_extension)
 
     return extensions
 
