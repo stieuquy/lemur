@@ -132,7 +132,7 @@ def normalize_extensions(csr):
         san_dnsnames = san_extension.value.get_values_for_type(x509.DNSName)
     except x509.extensions.ExtensionNotFound:
         san_dnsnames = []
-        san_extension = x509.Extension(x509.oid.ExtensionOID.SUBJECT_ALTERNATIVE_NAME, True, x509.SubjectAlternativeName(san_dnsnames))
+        san_extension = x509.Extension(x509.oid.ExtensionOID.SUBJECT_ALTERNATIVE_NAME, False, x509.SubjectAlternativeName(san_dnsnames))
 
     common_name = csr.subject.get_attributes_for_oid(x509.oid.NameOID.COMMON_NAME)
     common_name = common_name[0].value
@@ -152,12 +152,12 @@ def normalize_extensions(csr):
         for san in san_extension.value:
             general_names.append(san)
 
-        san_extension = x509.Extension(x509.oid.ExtensionOID.SUBJECT_ALTERNATIVE_NAME, True, x509.SubjectAlternativeName(general_names))
+        san_extension = x509.Extension(x509.oid.ExtensionOID.SUBJECT_ALTERNATIVE_NAME, False, x509.SubjectAlternativeName(general_names))
 
     # Remove original san extension from CSR and add new SAN extension
     extensions = list(filter(filter_san_extensions, csr.extensions._extensions))
-    #if san_extension is not None and len(san_extension.value._general_names) > 0:
-    #    extensions.append(san_extension)
+    if san_extension is not None and len(san_extension.value._general_names) > 0:
+        extensions.append(san_extension)
 
     return extensions
 
